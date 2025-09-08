@@ -3,6 +3,7 @@
 import {UserProfile} from "@/app/profile/page";
 import ChatHeader from "@/components/ChatHeader";
 import StreamChatInterface from "@/components/StreamChatInterface";
+
 import {useAuth} from "@/contexts/auth-context";
 import {getUserMatches} from "@/lib/actions/matches";
 import {useParams, useRouter} from "next/navigation";
