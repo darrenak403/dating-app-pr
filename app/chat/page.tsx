@@ -8,7 +8,7 @@ import Link from "next/link";
 interface ChatData {
   id: string;
   user: UserProfile;
-  lastMessage: string;
+  lastMessage?: string;
   lastMessageTime: string;
   unreadCount: number;
 }
@@ -16,7 +16,7 @@ interface ChatData {
 export default function ChatPage() {
   const [chats, setChats] = useState<ChatData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     async function loadMatches() {
       try {
@@ -24,15 +24,15 @@ export default function ChatPage() {
         const chatData: ChatData[] = userMatches.map((match) => ({
           id: match.id,
           user: match,
-          lastMessage: "Start a conversation!",
-          lastMessageTime: match.updated_at,
-          unreadCount: 0, // Random unread count for demo
+          lastMessage: "Start your conversation!",
+          lastMessageTime: match.created_at,
+          unreadCount: 0,
         }));
         setChats(chatData);
-        console.log(chatData);
+        console.log("userMatches:", userMatches);
+        console.log("chatData:", chatData);
       } catch (error) {
         console.error(error);
-        setError("Failed to load matches.");
       } finally {
         setLoading(false);
       }
@@ -41,15 +41,18 @@ export default function ChatPage() {
     loadMatches();
   }, []);
 
-  function formatTime(dateString: string) {
-    const date = new Date(dateString);
+  function formatTime(timestamp: string) {
+    const date = new Date(timestamp);
     const now = new Date();
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
     if (diffInHours < 1) {
       return "Just now";
     } else if (diffInHours < 24) {
-      return date.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } else if (diffInHours < 48) {
       return "Yesterday";
     } else {
@@ -71,7 +74,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-gradient-to-br from-pink-50 to-red-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-red-50 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -108,6 +111,9 @@ export default function ChatPage() {
                   key={key}
                   href={`/chat/${chat.id}`}
                   className="block hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                  onClick={() =>
+                    console.log("Navigating to chat with ID:", chat.id)
+                  }
                 >
                   <div className="flex items-center p-6 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
                     <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
