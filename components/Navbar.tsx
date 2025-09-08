@@ -39,7 +39,7 @@ export default function Navbar() {
                 href="/profile"
                 className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium transition-colors duration-200"
               >
-                Profile
+                Your Profile
               </Link>
             </div>
           )}
